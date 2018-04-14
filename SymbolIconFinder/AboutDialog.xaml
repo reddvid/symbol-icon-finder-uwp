@@ -1,0 +1,74 @@
+﻿<ContentDialog
+    x:Class="SymbolIconFinder.AboutDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SymbolIconFinder"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" CloseButtonClick="ContentDialog_CloseButtonClick"
+    CloseButtonText="Close">
+
+    <Grid x:Name="LayoutRoot" Margin="24">
+        <ScrollViewer VerticalContentAlignment="Center" VerticalScrollBarVisibility="Auto">
+            <StackPanel VerticalAlignment="Center">
+                <StackPanel HorizontalAlignment="Center">
+                    <TextBlock
+                        Grid.Column="1"
+                        Margin="6,0"
+                        VerticalAlignment="Center"
+                        Style="{ThemeResource TitleTextBlockStyle}"
+                        Text="Symbol Icon Finder" />
+                </StackPanel>
+                <StackPanel HorizontalAlignment="Center">
+                    <TextBlock
+                        Grid.Column="2"
+                        VerticalAlignment="Bottom"
+                        Foreground="Gray" FontSize="14"
+                        Style="{StaticResource CaptionTextBlockStyle}"
+                        TextWrapping="WrapWholeWords">
+                        <Run x:Name="VersionTextBlock" Text="version 2.5" />
+                        <Span xml:space="default">
+                            <Hyperlink Click="showmoreapps_Click" UnderlineStyle="None">by Red David</Hyperlink>
+                        </Span>
+                    </TextBlock>
+                </StackPanel>
+                <Border Height="16" />
+                <HyperlinkButton
+                    x:Name="hl_donate"
+                    HorizontalAlignment="Center"
+                    Click="hl_donate_Click"
+                    Content="Donate"
+                    Style="{StaticResource TextBlockButtonStyle}" />
+ <HyperlinkButton
+                    x:Name="hl_feedback"
+                    HorizontalAlignment="Center"
+                    Click="hl_feedback_Click"
+                    Content="Send feedback"
+                    Style="{StaticResource TextBlockButtonStyle}" />
+                <HyperlinkButton
+                    HorizontalAlignment="Center"
+                    Click="btn_rate_Click"
+                    Content="Rate &amp; Review"
+                    Style="{StaticResource TextBlockButtonStyle}" />
+                <HyperlinkButton
+                    HorizontalAlignment="Center"
+                    Click="btn_share_Click"
+                    Content="Share app"
+                    Style="{StaticResource TextBlockButtonStyle}" />
+                <HyperlinkButton
+                    HorizontalAlignment="Center"
+                    Click="btn_fb_Click"
+                    Content="Like on Facebook"
+                    Style="{StaticResource TextBlockButtonStyle}" />
+                <Border Height="16"/>
+                <TextBlock Text="Source(s):" TextAlignment="Center"/>
+                <HyperlinkButton
+                    HorizontalAlignment="Center"
+                    Click="btn_source_Click"
+                    Content="Segoe MDL2 icons"
+                    Style="{StaticResource TextBlockButtonStyle}" />
+            </StackPanel>
+        </ScrollViewer>
+
+    </Grid>
+</ContentDialog>
