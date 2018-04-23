@@ -6,13 +6,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    CloseButtonText="Close" CloseButtonClick="ContentDialog_CloseButtonClick">
+    CloseButtonText="Close" CloseButtonClick="ContentDialog_CloseButtonClick" CloseButtonStyle="{ThemeResource ButtonRevealStyle}">
 
     <ContentDialog.Resources>
         <Style TargetType="TextBox">
             <Setter Property="MinWidth" Value="{ThemeResource TextControlThemeMinWidth}"/>
             <Setter Property="MinHeight" Value="{ThemeResource TextControlThemeMinHeight}"/>
-            <Setter Property="Foreground" Value="{ThemeResource TextControlForeground}"/>
+            <Setter Property="Foreground" Value="Black"/>
             <Setter Property="Background" Value="DarkGray"/>
             <Setter Property="BorderBrush" Value="{ThemeResource TextControlBorderBrush}"/>
             <Setter Property="SelectionHighlightColor" Value="{ThemeResource TextControlSelectionHighlightColor}"/>
@@ -196,9 +196,9 @@
             <Grid MinWidth="240" HorizontalAlignment="Left" 
                               IsRightTapEnabled="True"
                               Background="Transparent">
-                <Button x:Name="tbIcon" FontSize="18" Content="&#xE700;"
-                                    IsHitTestVisible="False" Background="Transparent"
-                                    Height="48" Width="48" VerticalAlignment="Center"
+                <TextBlock x:Name="tbIcon" Text="&#xE700;"
+                                    IsHitTestVisible="False" 
+                                    FontSize="28" Padding="12" VerticalAlignment="Center"
                                     FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Left"/>
                 <StackPanel VerticalAlignment="Center" Margin="60,0,0,0"  HorizontalAlignment="Left">
                     <TextBlock x:Name="tbDesc" Text="GlobalNavigationButton" FontSize="16"/>
@@ -209,42 +209,44 @@
     </ContentDialog.Title>
 
     <Grid>
-        <StackPanel>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="4"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-            <TextBox x:Name="tbxXaml" 
+        <ScrollViewer IsTabStop="True" VerticalScrollBarVisibility="Hidden">
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="4"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="tbxXaml" 
                      IsReadOnly="True"
                      Header="XAML" 
                      GotFocus="tbx_GotFocus"
                      TextWrapping="Wrap"/>
-                <TextBox x:Name="tbxCode" 
+                    <TextBox x:Name="tbxCode" 
                      IsReadOnly="True" Grid.Column="2"
                      Header="C# Code" 
                      GotFocus="tbx_GotFocus"
                      TextWrapping="Wrap"/>
-            </Grid>
-            <Border Height="8"/>
-            <TextBox x:Name="tbxSymbol" 
+                </Grid>
+                <Border Height="8"/>
+                <TextBox x:Name="tbxSymbol" 
                      IsReadOnly="True" 
                      GotFocus="tbx_GotFocus"
                      Header="Symbol Icon" 
                      TextWrapping="Wrap"/>
-            <Border Height="8"/>
-            <TextBox x:Name="tbxFont" 
+                <Border Height="8"/>
+                <TextBox x:Name="tbxFont" 
                      IsReadOnly="True" 
                      GotFocus="tbx_GotFocus"
                      Header="Font Icon" 
                      TextWrapping="Wrap"/>
-            <Border Height="8"/>
-            <TextBox x:Name="tbxButton" 
+                <Border Height="8"/>
+                <TextBox x:Name="tbxButton" 
                      IsReadOnly="True" 
                      GotFocus="tbx_GotFocus"
                      Header="XAML Button" 
                      TextWrapping="Wrap"/>
-        </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </ContentDialog>

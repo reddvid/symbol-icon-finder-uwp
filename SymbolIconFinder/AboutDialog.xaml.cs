@@ -8,6 +8,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Email;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Services.Store;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -22,12 +23,14 @@ namespace SymbolIconFinder
 {
     public sealed partial class AboutDialog : ContentDialog
     {
+        private StoreContext context = null;
+
         public AboutDialog()
         {
             this.InitializeComponent();
 
-            GetAppVersion();
-        }
+            GetAppVersion();           
+        }      
 
         private void GetAppVersion()
         {
@@ -101,13 +104,67 @@ namespace SymbolIconFinder
         }
 
         private void ContentDialog_CloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
+        {          
             this.Hide();
         }
 
         private void hl_donate_Click(object sender, RoutedEventArgs e)
         {
+            PurchaseAddOn("9P650NF68J50");
+        }
+
+        private  async void PurchaseAddOn(string storeId)
+        {
+            if (context == null)
+            {
+                context = StoreContext.GetDefault();
+                // If your app is a desktop app that uses the Desktop Bridge, you
+                // may need additional code to configure the StoreContext object.
+                // For more info, see https://aka.ms/storecontext-for-desktop.
+            }
+
+            StorePurchaseResult result = await context.RequestPurchaseAsync(storeId);
+
+            // Capture the error message for the operation, if any.
+            string extendedError = string.Empty;
+            if (result.ExtendedError != null)
+            {
+                extendedError = result.ExtendedError.Message;
+            }
+
+            switch (result.Status)
+            {
+                case StorePurchaseStatus.AlreadyPurchased:
+                    tbStatus.Text = "You already donated.";
+                    break;
+
+                case StorePurchaseStatus.Succeeded:
+                    tbStatus.Text = "Donation succeeded. Thank you!";
+                    break;
+
+                case StorePurchaseStatus.NotPurchased:
+                    tbStatus.Text = "Your purchase did not complete. " +
+                        "The user may have cancelled the purchase. ExtendedError: " + extendedError;
+                    break;
+
+                case StorePurchaseStatus.NetworkError:
+                    tbStatus.Text = "The purchase was unsuccessful due to a network error. " +
+                        "ExtendedError: " + extendedError;
+                    break;
+
+                case StorePurchaseStatus.ServerError:
+                    tbStatus.Text = "The purchase was unsuccessful due to a server error. " +
+                        "ExtendedError: " + extendedError;
+                    break;
+
+                default:
+                    tbStatus.Text = "The purchase was unsuccessful due to an unknown error. " +
+                        "ExtendedError: " + extendedError;
+                    break;
+            }
 
         }
+
+
     }
 }

@@ -39,7 +39,10 @@
                     Click="hl_donate_Click"
                     Content="Donate"
                     Style="{StaticResource TextBlockButtonStyle}" />
- <HyperlinkButton
+                <TextBlock x:Name="tbStatus" FontSize="12" Foreground="Gray"
+                          MaxWidth="600"
+                           TextWrapping="Wrap" TextAlignment="Center"/>
+                <HyperlinkButton
                     x:Name="hl_feedback"
                     HorizontalAlignment="Center"
                     Click="hl_feedback_Click"

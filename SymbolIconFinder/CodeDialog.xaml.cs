@@ -25,7 +25,7 @@ namespace SymbolIconFinder
             this.InitializeComponent();
                      
             tbDesc.Text = desc;
-            tbIcon.Content = icon;
+            tbIcon.Text = icon;
             tbXaml.Text = xaml;
 
             LoadXAML(xaml);
