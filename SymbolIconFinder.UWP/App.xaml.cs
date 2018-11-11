@@ -19,7 +19,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-namespace SymbolIconFinder
+namespace SymbolIconFinder.UWP
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
@@ -34,6 +34,26 @@ namespace SymbolIconFinder
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+        }
+
+        protected override void OnActivated(IActivatedEventArgs e)
+        {
+            if (e.Kind == ActivationKind.Protocol)
+            {
+                var uriArgs = e as ProtocolActivatedEventArgs;
+                if (uriArgs != null)
+                {
+
+                        // Navigate to the 2nd page of the  app
+                        Frame rootFrame = Window.Current.Content as Frame;
+                        rootFrame = new Frame();
+                        Window.Current.Content = rootFrame;
+                        rootFrame.Navigate(typeof(MainPage), uriArgs.Uri.Host);
+                        Window.Current.Activate();
+                    ExtendAcrylic();  
+                }
+            }
+
         }
 
         /// <summary>
@@ -75,18 +95,22 @@ namespace SymbolIconFinder
 
                 // Ensure the current window is active
                 Window.Current.Activate();
+                ExtendAcrylic();
+            }
+        }
 
-                if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.XamlCompositionBrushBase") && AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Mobile")
-                {
-                    ApplicationViewTitleBar formattableTitleBar = ApplicationView.GetForCurrentView().TitleBar;
-                    formattableTitleBar.ButtonBackgroundColor = Colors.Transparent;
-                    formattableTitleBar.BackgroundColor = Colors.Transparent;
-                    formattableTitleBar.ButtonForegroundColor = Colors.White;
-                    formattableTitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+        private static void ExtendAcrylic()
+        {
+            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.XamlCompositionBrushBase") && AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Mobile")
+            {
+                ApplicationViewTitleBar formattableTitleBar = ApplicationView.GetForCurrentView().TitleBar;
+                formattableTitleBar.ButtonBackgroundColor = Colors.Transparent;
+                formattableTitleBar.BackgroundColor = Colors.Transparent;
+                formattableTitleBar.ButtonForegroundColor = Colors.White;
+                formattableTitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
 
-                    CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-                    coreTitleBar.ExtendViewIntoTitleBar = true;
-                }
+                CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+                coreTitleBar.ExtendViewIntoTitleBar = true;
             }
         }
 

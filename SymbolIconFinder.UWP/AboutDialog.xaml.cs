@@ -9,6 +9,7 @@ using Windows.ApplicationModel.Email;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Services.Store;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -19,7 +20,7 @@ using Windows.UI.Xaml.Navigation;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace SymbolIconFinder
+namespace SymbolIconFinder.UWP
 {
     public sealed partial class AboutDialog : ContentDialog
     {
@@ -29,9 +30,9 @@ namespace SymbolIconFinder
         {
             this.InitializeComponent();
 
-            GetAppVersion();           
-        }      
-
+            GetAppVersion();
+        }
+        
         private void GetAppVersion()
         {
             Package package = Package.Current;
@@ -104,16 +105,17 @@ namespace SymbolIconFinder
         }
 
         private void ContentDialog_CloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {          
+        {
             this.Hide();
         }
 
-        private void hl_donate_Click(object sender, RoutedEventArgs e)
+        private async void hl_donate_Click(object sender, RoutedEventArgs e)
         {
-            PurchaseAddOn("9P650NF68J50");
+            await Launcher.LaunchUriAsync(new Uri("https://www.buymeacoffee.com/redDavid"));
+            // PurchaseAddOn("9P650NF68J50");
         }
 
-        private  async void PurchaseAddOn(string storeId)
+        private async void PurchaseAddOn(string storeId)
         {
             if (context == null)
             {

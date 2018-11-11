@@ -1,16 +1,23 @@
 ﻿<ContentDialog
-    x:Class="SymbolIconFinder.AboutDialog"
+    x:Class="SymbolIconFinder.UWP.AboutDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:SymbolIconFinder"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:SymbolIconFinder.UWP"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" CloseButtonClick="ContentDialog_CloseButtonClick"
-    CloseButtonText="Close">
+    Background="{ThemeResource SystemControlAcrylicElementBrush}"
+    BorderBrush="#323232"
+    CloseButtonClick="ContentDialog_CloseButtonClick"
+    CloseButtonText="Close"
+    mc:Ignorable="d">
 
-    <Grid x:Name="LayoutRoot" Margin="24">
+    <Grid
+        x:Name="LayoutRoot"
+        MinWidth="320"
+        Margin="24">
         <ScrollViewer VerticalContentAlignment="Center" VerticalScrollBarVisibility="Auto">
             <StackPanel VerticalAlignment="Center">
+                <Image Height="64" Source="/Assets/IconFinder2.png" />
                 <StackPanel HorizontalAlignment="Center">
                     <TextBlock
                         Grid.Column="1"
@@ -23,7 +30,8 @@
                     <TextBlock
                         Grid.Column="2"
                         VerticalAlignment="Bottom"
-                        Foreground="Gray" FontSize="14"
+                        FontSize="14"
+                        Foreground="Gray"
                         Style="{StaticResource CaptionTextBlockStyle}"
                         TextWrapping="WrapWholeWords">
                         <Run x:Name="VersionTextBlock" Text="version 2.5" />
@@ -37,11 +45,16 @@
                     x:Name="hl_donate"
                     HorizontalAlignment="Center"
                     Click="hl_donate_Click"
-                    Content="Donate"
+                    Content="Buy me a coffee"
+                    FontWeight="SemiBold"
                     Style="{StaticResource TextBlockButtonStyle}" />
-                <TextBlock x:Name="tbStatus" FontSize="12" Foreground="Gray"
-                          MaxWidth="600"
-                           TextWrapping="Wrap" TextAlignment="Center"/>
+                <TextBlock
+                    x:Name="tbStatus"
+                    MaxWidth="600"
+                    FontSize="12"
+                    Foreground="Gray"
+                    TextAlignment="Center"
+                    TextWrapping="Wrap" />
                 <HyperlinkButton
                     x:Name="hl_feedback"
                     HorizontalAlignment="Center"
@@ -63,8 +76,8 @@
                     Click="btn_fb_Click"
                     Content="Like on Facebook"
                     Style="{StaticResource TextBlockButtonStyle}" />
-                <Border Height="16"/>
-                <TextBlock Text="Source(s):" TextAlignment="Center"/>
+                <Border Height="16" />
+                <TextBlock Text="Source(s):" TextAlignment="Center" />
                 <HyperlinkButton
                     HorizontalAlignment="Center"
                     Click="btn_source_Click"

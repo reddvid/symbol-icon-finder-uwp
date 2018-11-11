@@ -5,7 +5,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.ApplicationModel.UserActivities;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Services.Store;
@@ -22,7 +24,7 @@ using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
-namespace SymbolIconFinder
+namespace SymbolIconFinder.UWP
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -44,6 +46,30 @@ namespace SymbolIconFinder
 
             // Get CTRL+F
             Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
+
+            GenerateActivityAsync();
+        }
+
+        UserActivitySession _currentActivity;
+        private async Task GenerateActivityAsync()
+        {
+            // Get the default UserActivityChannel and query it for our UserActivity. If the activity doesn't exist, one is created.
+            UserActivityChannel channel = UserActivityChannel.GetDefault();
+            UserActivity userActivity = await channel.GetOrCreateUserActivityAsync("MainPage");
+
+            // Populate required properties
+            userActivity.VisualElements.DisplayText = "Symbol Icon Finder";
+            userActivity.ActivationUri = new Uri("symboliconfinder://");        
+            userActivity.VisualElements.Description = "View and search Segoe MDL2 icons";
+                     
+            // Save
+            await userActivity.SaveAsync(); //save the new metadata
+
+            // Dispose of any current UserActivitySession, and create a new one.
+            _currentActivity?.Dispose();
+            _currentActivity = userActivity.CreateSession();
+
+            Debug.WriteLine("Created user session");
         }
 
         private async void ConsumeAddOn(string storeId)
@@ -106,6 +132,9 @@ namespace SymbolIconFinder
         {
             Icons icons = new Icons();
             iconsList = icons.GetIcons();
+            gvIcons.ItemsSource = iconsList;
+
+            CountIcons();
         }
 
         private void searchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -118,13 +147,28 @@ namespace SymbolIconFinder
 
                     gvIcons.ItemsSource = iconsList.Where(i =>
                     i.desc.ToLower().Contains(inputText) ||
-                    i.tags.ToLower().Contains(inputText)
-                    );
+                    i.tags.ToLower().Contains(inputText));
                 }
                 else
                 {
                     gvIcons.ItemsSource = iconsList;
                 }
+            }
+
+            CountIcons();
+        }
+
+        private void CountIcons()
+        {
+            if (gvIcons.Items.Count != 0)
+            {
+                gvIcons.Visibility = Visibility.Visible;
+                NoResultsTxt.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                gvIcons.Visibility = Visibility.Collapsed;
+                NoResultsTxt.Visibility = Visibility.Visible;
             }
         }
 
@@ -153,11 +197,37 @@ namespace SymbolIconFinder
                     case "enum":
                         CopyToClipboard(selectedIcon.desc);
                         break;
-                    case "xaml":
+                    case "xamltext":
+                        CopyXamlToClipboard(selectedIcon.unicode);
+                        break;
+                    case "xamlcontent":
+                        CopyXamlToClipboardAsContent(selectedIcon.unicode);
+                        break;
+                    case "xamlraw":
                         CopyToClipboard(selectedIcon.unicode);
                         break;
                 }
             }
+        }
+
+        private void CopyXamlToClipboardAsContent(string content)
+        {
+            Clipboard.Clear();
+            Clipboard.Flush();
+
+            var toCopy = new DataPackage();
+            toCopy.SetText("Content=\"" + content + "\" FontFamily=\"Segoe MDL2 Assets\"");
+            Clipboard.SetContent(toCopy);
+        }
+
+        private void CopyXamlToClipboard(string content)
+        {
+            Clipboard.Clear();
+            Clipboard.Flush();
+
+            var toCopy = new DataPackage();
+            toCopy.SetText("Text=\"" + content + "\" FontFamily=\"Segoe MDL2 Assets\"");
+            Clipboard.SetContent(toCopy);
         }
 
         private void CopyToClipboard(string content)
@@ -177,6 +247,7 @@ namespace SymbolIconFinder
                 Icons selectedItem = gvIcons.SelectedItem as Icons;
                 // Show Codes dialog
                 CodeDialog codeDialog = new CodeDialog(selectedItem.desc, selectedItem.icon, selectedItem.unicode);
+                codeDialog.BorderThickness = new Thickness(0);
                 await codeDialog.ShowAsync();
             }
         }
@@ -289,7 +360,7 @@ namespace SymbolIconFinder
             {
                 GridViewItem lvi = gvIcons.ContainerFromItem(gvIcons.SelectedItem) as GridViewItem;
                 Debug.WriteLine(lvi);
-                var _Container = gvIcons.ItemContainerGenerator.ContainerFromItem(lvi);
+                var _Container = gvIcons.ContainerFromItem(lvi);
                 var _Children = AllChildren(_Container);
 
                 var _FirstName = _Children

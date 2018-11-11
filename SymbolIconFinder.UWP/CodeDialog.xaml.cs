@@ -1,29 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Documents;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace SymbolIconFinder
+namespace SymbolIconFinder.UWP
 {
     public sealed partial class CodeDialog : ContentDialog
     {
         public CodeDialog(string desc, string icon, string xaml)
         {
             this.InitializeComponent();
-                     
+
             tbDesc.Text = desc;
             tbIcon.Text = icon;
             tbXaml.Text = xaml;
@@ -36,17 +25,24 @@ namespace SymbolIconFinder
 
             LoadButtonXaml(xaml);
 
+            LoadTextBlockXaml(xaml);
+
             LoadCode(xaml);
+        }
+
+        private void LoadTextBlockXaml(string xaml)
+        {
+            tbxTextblock.Text = "<TextBlock x:Name=\"tbTest\" Text=\"" + xaml + "\" FontFamily=\"Segoe MDL2 Assets\"/>";
         }
 
         private void LoadCode(string xaml)
         {
-            tbxCode.Text = "\\u" + xaml.Replace("&#x", "").Replace(";","");
+            tbxCode.Text = "\\u" + xaml.Replace("&#x", "").Replace(";", "");
         }
 
         private void LoadButtonXaml(string xaml)
         {
-            tbxButton.Text = "<Button x:Name=\"btnIcon\" Content=\"&#xE700;\" FontFamily=\"Segoe MDL2 Assets\"/>";
+            tbxButton.Text = "<Button x:Name=\"btnIcon\" Content=\"" + xaml + "\" FontFamily=\"Segoe MDL2 Assets\"/>";
         }
 
         private void LoadFontIcon(string xaml)
@@ -75,6 +71,12 @@ namespace SymbolIconFinder
             if (!String.IsNullOrEmpty(tbx.Text))
             {
                 tbx.SelectAll();
+
+                DataPackage d = new DataPackage();
+
+                d.SetText(tbx.Text);
+
+                Clipboard.SetContent(d);
             }
         }
     }

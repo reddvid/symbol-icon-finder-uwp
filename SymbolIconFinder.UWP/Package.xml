@@ -359,7 +359,7 @@
     <Language Code="zu-za" InMinimumRequirementSet="true" />
   </SupportedLocales>
   <ProductReservedInfo>
-    <MainPackageIdentityName>32760RedDavid.SymbolIconFinder</MainPackageIdentityName>
+    <MainPackageIdentityName>32760RedDavid.SymbolIconFinder.UWP</MainPackageIdentityName>
     <ReservedNames>
       <ReservedName>Symbol Icon Finder</ReservedName>
     </ReservedNames>
