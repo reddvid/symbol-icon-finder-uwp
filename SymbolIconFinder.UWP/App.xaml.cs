@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -34,6 +36,8 @@ namespace SymbolIconFinder.UWP
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+
+            AppCenter.Start("3cd54ec5-1f87-47a0-b5ac-a01a3f9385a8", typeof(Analytics));
         }
 
         protected override void OnActivated(IActivatedEventArgs e)
@@ -49,11 +53,11 @@ namespace SymbolIconFinder.UWP
                         rootFrame = new Frame();
                         Window.Current.Content = rootFrame;
                         rootFrame.Navigate(typeof(MainPage), uriArgs.Uri.Host);
-                        Window.Current.Activate();
-                    ExtendAcrylic();  
                 }
             }
 
+            Window.Current.Activate();
+            ExtendAcrylic();
         }
 
         /// <summary>
@@ -95,6 +99,7 @@ namespace SymbolIconFinder.UWP
 
                 // Ensure the current window is active
                 Window.Current.Activate();
+                
                 ExtendAcrylic();
             }
         }

@@ -3,27 +3,22 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Email;
 using Windows.ApplicationModel.UserActivities;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Services.Store;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -45,7 +40,7 @@ namespace SymbolIconFinder.UWP
 
             SetText();
 
-            ConsumeAddOn("9P650NF68J50");
+            // ConsumeAddOn("9P650NF68J50");
 
             // Get CTRL+F
             Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
@@ -248,11 +243,81 @@ namespace SymbolIconFinder.UWP
             if (gvIcons.SelectedItem != null)
             {
                 Icons selectedItem = gvIcons.SelectedItem as Icons;
+
                 // Show Codes dialog
-                CodeDialog codeDialog = new CodeDialog(selectedItem.desc, selectedItem.icon, selectedItem.unicode);
-                codeDialog.BorderThickness = new Thickness(0);
-                await codeDialog.ShowAsync();
+                FindName("CodeGrid");
+                CodeGrid.Visibility = Visibility.Visible;
+
+                LoadCodes(selectedItem);
             }
+        }
+
+        private void LoadCodes(Icons selectedItem)
+        {
+            var desc = selectedItem.desc;
+            var icon = selectedItem.icon;
+            var xaml = selectedItem.unicode;
+
+            tbDesc.Text = desc;
+            tbIcon.Text = icon;
+            tbXaml.Text = xaml;
+
+            LoadXAML(xaml);
+
+            LoadSymbolIcon(desc, icon, xaml);
+
+            LoadFontIcon(xaml);
+
+            LoadButtonXaml(xaml);
+
+            LoadTextBlockXaml(xaml);
+
+            LoadCode(xaml);
+        }
+
+        private void tbx_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox tbx = sender as TextBox;
+            if (!String.IsNullOrEmpty(tbx.Text))
+            {
+                tbx.SelectAll();
+
+                DataPackage d = new DataPackage();
+
+                d.SetText(tbx.Text);
+
+                Clipboard.SetContent(d);
+            }
+        }
+
+        private void LoadTextBlockXaml(string xaml)
+        {
+            tbxTextblock.Text = "<TextBlock x:Name=\"tbTest\" Text=\"" + xaml + "\" FontFamily=\"Segoe MDL2 Assets\"/>";
+        }
+
+        private void LoadCode(string xaml)
+        {
+            tbxCode.Text = "\\u" + xaml.Replace("&#x", "").Replace(";", "");
+        }
+
+        private void LoadButtonXaml(string xaml)
+        {
+            tbxButton.Text = "<Button x:Name=\"btnIcon\" Content=\"" + xaml + "\" FontFamily=\"Segoe MDL2 Assets\"/>";
+        }
+
+        private void LoadFontIcon(string xaml)
+        {
+            tbxFont.Text = "<FontIcon FontFamily=\"Segoe MDL2 Assets\" Glyph=\"" + xaml + "\"/>";
+        }
+
+        private void LoadXAML(string xaml)
+        {
+            tbxXaml.Text = xaml;
+        }
+
+        private void LoadSymbolIcon(string desc, string icon, string xaml)
+        {
+            tbxSymbol.Text = "<SymbolIcon Symbol=\"" + desc + "\"/>";
         }
 
         private void btnAbout_Click(object sender, RoutedEventArgs e)
@@ -312,8 +377,10 @@ namespace SymbolIconFinder.UWP
             {
                 Icons selectedItem = gvIcons.SelectedItem as Icons;
                 // Show Codes dialog
-                CodeDialog codeDialog = new CodeDialog(selectedItem.desc, selectedItem.icon, selectedItem.unicode);
-                await codeDialog.ShowAsync();
+                FindName("CodeGrid");
+                CodeGrid.Visibility = Visibility.Visible;
+
+                LoadCodes(selectedItem);
             }
         }
 
@@ -344,8 +411,10 @@ namespace SymbolIconFinder.UWP
             {
                 Icons selectedItem = gvIcons.SelectedItem as Icons;
                 // Show Codes dialog
-                CodeDialog codeDialog = new CodeDialog(selectedItem.desc, selectedItem.icon, selectedItem.unicode);
-                await codeDialog.ShowAsync();
+                FindName("CodeGrid");
+                CodeGrid.Visibility = Visibility.Visible;
+
+                LoadCodes(selectedItem);
             }
         }
 
@@ -535,6 +604,12 @@ namespace SymbolIconFinder.UWP
                         "ExtendedError: " + extendedError;
                     break;
             }
+
+        }
+
+        private void CloseDialogBtn_Click(object sender, RoutedEventArgs e)
+        {
+            UnloadObject(CodeGrid);
 
         }
     }

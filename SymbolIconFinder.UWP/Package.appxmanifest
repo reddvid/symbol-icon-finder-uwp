@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="32760RedDavid.SymbolIconFinder" Publisher="CN=3CB88423-4D53-4969-9486-DE9585CE29EF" Version="1.5.7.0" />
+  <Identity Name="32760RedDavid.SymbolIconFinder" Publisher="CN=3CB88423-4D53-4969-9486-DE9585CE29EF" Version="1.5.9.0" />
   <mp:PhoneIdentity PhoneProductId="bc989b8b-085d-4b89-b9d2-6863c7927920" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Symbol Icon Finder</DisplayName>
@@ -8,9 +8,9 @@
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
-    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17134.0" MaxVersionTested="10.0.17763.0" />
-    <TargetDeviceFamily Name="Windows.Xbox" MinVersion="10.0.17134.0" MaxVersionTested="10.0.17763.0" />
-    <TargetDeviceFamily Name="Windows.Holographic" MinVersion="10.0.17134.0" MaxVersionTested="10.0.17763.0" />
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.16299.0" MaxVersionTested="10.0.17134.0" />
+    <TargetDeviceFamily Name="Windows.Xbox" MinVersion="10.0.16299.0" MaxVersionTested="10.0.17134.0" />
+    <TargetDeviceFamily Name="Windows.Holographic" MinVersion="10.0.16299.0" MaxVersionTested="10.0.17134.0" />
   </Dependencies>
   <Resources>
     <Resource Language="x-generate" />
