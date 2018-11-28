@@ -881,6 +881,107 @@
              </RichTextBlock>
              </StackPanel>
              </Grid>-->
+        <Grid
+            x:Name="AboutGrid"
+            Grid.RowSpan="4"
+            x:Load="False"
+            Background="{ThemeResource MyAcrylicBrush}"
+            Visibility="Collapsed">
+            <Grid.Transitions>
+                <TransitionCollection>
+                    <EdgeUIThemeTransition Edge="Bottom" />
+                </TransitionCollection>
+            </Grid.Transitions>
+
+            <Grid
+                Padding="120,64"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="{StaticResource MyBaseColor}">
+                <Button
+                    x:Name="CloseAboutBtn"
+                    Width="48"
+                    Height="48"
+                    Margin="0,-64,-120,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Background="Transparent"
+                    Click="CloseAboutBtn_Click"
+                    Content="&#xE711;"
+                    FontFamily="Segoe MDL2 Assets" />
+                <ScrollViewer VerticalContentAlignment="Center" VerticalScrollBarVisibility="Auto">
+                    <StackPanel VerticalAlignment="Center">
+                        <Image Height="64" Source="/Assets/IconFinder2.png" />
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock
+                                Grid.Column="1"
+                                Margin="6,0"
+                                VerticalAlignment="Center"
+                                Style="{ThemeResource TitleTextBlockStyle}"
+                                Text="Symbol Icon Finder" />
+                        </StackPanel>
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock
+                                Grid.Column="2"
+                                VerticalAlignment="Bottom"
+                                FontSize="14"
+                                Foreground="Gray"
+                                Style="{StaticResource CaptionTextBlockStyle}"
+                                TextWrapping="WrapWholeWords">
+                                <Run x:Name="VersionTextBlock" Text="version 2.5" />
+                                <Span xml:space="default">
+                                    <Hyperlink Click="showmoreapps_Click" UnderlineStyle="None">by Red David</Hyperlink>
+                                </Span>
+                            </TextBlock>
+                        </StackPanel>
+                        <Border Height="16" />
+                        <HyperlinkButton
+                            x:Name="hl_donate"
+                            HorizontalAlignment="Center"
+                            Click="hl_donate_Click"
+                            Content="Buy me a coffee"
+                            FontWeight="SemiBold"
+                            Style="{StaticResource TextBlockButtonStyle}" />
+                        <TextBlock
+                            x:Name="tbStatus"
+                            MaxWidth="600"
+                            FontSize="12"
+                            Foreground="Gray"
+                            TextAlignment="Center"
+                            TextWrapping="Wrap" />
+                        <HyperlinkButton
+                            x:Name="hl_feedback"
+                            HorizontalAlignment="Center"
+                            Click="hl_feedback_Click"
+                            Content="Send feedback"
+                            Style="{StaticResource TextBlockButtonStyle}" />
+                        <HyperlinkButton
+                            HorizontalAlignment="Center"
+                            Click="btn_rate_Click"
+                            Content="Rate &amp; Review"
+                            Style="{StaticResource TextBlockButtonStyle}" />
+                        <HyperlinkButton
+                            HorizontalAlignment="Center"
+                            Click="btn_share_Click"
+                            Content="Share app"
+                            Style="{StaticResource TextBlockButtonStyle}" />
+                        <HyperlinkButton
+                            HorizontalAlignment="Center"
+                            Click="btn_fb_Click"
+                            Content="Like on Facebook"
+                            Style="{StaticResource TextBlockButtonStyle}" />
+                        <Border Height="16" />
+                        <TextBlock Text="Source(s):" TextAlignment="Center" />
+                        <HyperlinkButton
+                            HorizontalAlignment="Center"
+                            Click="btn_source_Click"
+                            Content="Segoe MDL2 icons"
+                            Style="{StaticResource TextBlockButtonStyle}" />
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>

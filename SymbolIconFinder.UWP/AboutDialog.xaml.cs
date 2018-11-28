@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -32,7 +33,7 @@ namespace SymbolIconFinder.UWP
 
             GetAppVersion();
         }
-        
+
         private void GetAppVersion()
         {
             Package package = Package.Current;
@@ -70,17 +71,26 @@ namespace SymbolIconFinder.UWP
 
         private async void hl_feedback_Click(object sender, RoutedEventArgs e)
         {
-            if (Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.IsSupported())
+            try
             {
-                // Launch feedback
-                var launcher = Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
-                await launcher.LaunchAsync();
+                if (Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.IsSupported())
+                {
+                    // Launch feedback
+                    var launcher = Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
+                    await launcher.LaunchAsync();
+                }
+                else
+                {
+                    EmailMessage emailMessage = new EmailMessage();
+                    emailMessage.To.Add(new EmailRecipient("redappsupport@outlook.com"));
+                    emailMessage.Subject = "[FEEDBACK] Symbol Icon Finder";
+                    await EmailManager.ShowComposeNewEmailAsync(emailMessage);
+
+                }
             }
-            else
+            catch (Exception ex)
             {
-                EmailMessage emailMessage = new EmailMessage();
-                emailMessage.To.Add(new EmailRecipient("redappsupport@outlook.com"));
-                emailMessage.Subject = "[FEEDBACK] Symbol Icon Finder";
+                Debug.WriteLine(ex.Message);
             }
         }
 

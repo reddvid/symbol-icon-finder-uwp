@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Services.Store.Engagement;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -6,7 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.ApplicationModel.Email;
 using Windows.ApplicationModel.UserActivities;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -252,11 +255,16 @@ namespace SymbolIconFinder.UWP
             }
         }
 
-        private async void btnAbout_Click(object sender, RoutedEventArgs e)
+        private void btnAbout_Click(object sender, RoutedEventArgs e)
         {
             // Show About Content/User Dialog
-            AboutDialog aboutDialog = new AboutDialog();
-            await aboutDialog.ShowAsync();
+            //AboutDialog aboutDialog = new AboutDialog();
+            //await aboutDialog.ShowAsync();
+
+            FindName("AboutGrid");
+            AboutGrid.Visibility = Visibility.Visible;
+
+            GetAppVersion();
         }
 
         private void btnCodes_Loaded(object sender, RoutedEventArgs e)
@@ -386,6 +394,148 @@ namespace SymbolIconFinder.UWP
                 _List.AddRange(AllChildren(_Child));
             }
             return _List;
+        }
+
+        private void CloseAboutBtn_Click(object sender, RoutedEventArgs e)
+        {
+            UnloadObject(AboutGrid);
+        }
+
+        private void GetAppVersion()
+        {
+            Package package = Package.Current;
+            PackageId packageId = package.Id;
+            PackageVersion version = packageId.Version;
+
+            DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
+            dataTransferManager.DataRequested += new TypedEventHandler<DataTransferManager,
+                DataRequestedEventArgs>(this.ShareTextHandler);
+
+            VersionTextBlock.Text = string.Format("version {0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
+        }
+
+        private void ShareTextHandler(DataTransferManager sender, DataRequestedEventArgs e)
+        {
+            DataRequest request = e.Request;
+            request.Data.Properties.Title = "Symbol Icon Finder";
+            request.Data.Properties.Description = "Share Symbol Icon Finder";
+            request.Data.Properties.ApplicationName = "Symbol Icon Finder";
+
+            request.Data.SetWebLink(new Uri("https://www.microsoft.com/store/apps/9P650NF68J50"));
+            request.Data.SetApplicationLink(new Uri("https://www.microsoft.com/store/apps/9P650NF68J50"));
+            request.Data.SetText("Symbol Icon Finder for Windows 10. #Windows10 #UWP");
+        }
+
+        private async void btn_source_Click(object sender, RoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri("https://docs.microsoft.com/en-us/windows/uwp/design/style/segoe-ui-symbol-font"));
+        }
+
+        private async void showmoreapps_Click(object sender, RoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri("ms-windows-store:Publisher?name=Red David"));
+        }
+
+        private async void hl_feedback_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (StoreServicesFeedbackLauncher.IsSupported())
+                {
+                    // Launch feedback
+                    var launcher = StoreServicesFeedbackLauncher.GetDefault();
+                    await launcher.LaunchAsync();
+                }
+                else
+                {
+                    EmailMessage emailMessage = new EmailMessage();
+                    emailMessage.To.Add(new EmailRecipient("redappsupport@outlook.com"));
+                    emailMessage.Subject = "[FEEDBACK] Symbol Icon Finder";
+                    await EmailManager.ShowComposeNewEmailAsync(emailMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        }
+
+        private void btn_share_Click(object sender, RoutedEventArgs e)
+        {
+            DataTransferManager.ShowShareUI();
+        }
+
+        private async void btn_rate_Click(object sender, RoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri("ms-windows-store://review/?ProductId=9P650NF68J50"));
+        }
+
+        private async void btn_fb_Click(object sender, RoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri("http://www.facebook.com/reddvidapps"));
+        }
+
+        private async void btn_twitter_Click(object sender, RoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri("http://www.twitter.com/reddvidapps"));
+        }
+
+        private async void hl_donate_Click(object sender, RoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri("https://www.buymeacoffee.com/redDavid"));
+            // PurchaseAddOn("9P650NF68J50");
+        }
+
+        private async void PurchaseAddOn(string storeId)
+        {
+            if (context == null)
+            {
+                context = StoreContext.GetDefault();
+                // If your app is a desktop app that uses the Desktop Bridge, you
+                // may need additional code to configure the StoreContext object.
+                // For more info, see https://aka.ms/storecontext-for-desktop.
+            }
+
+            StorePurchaseResult result = await context.RequestPurchaseAsync(storeId);
+
+            // Capture the error message for the operation, if any.
+            string extendedError = string.Empty;
+            if (result.ExtendedError != null)
+            {
+                extendedError = result.ExtendedError.Message;
+            }
+
+            switch (result.Status)
+            {
+                case StorePurchaseStatus.AlreadyPurchased:
+                    tbStatus.Text = "You already donated.";
+                    break;
+
+                case StorePurchaseStatus.Succeeded:
+                    tbStatus.Text = "Donation succeeded. Thank you!";
+                    break;
+
+                case StorePurchaseStatus.NotPurchased:
+                    tbStatus.Text = "Your purchase did not complete. " +
+                        "The user may have cancelled the purchase. ExtendedError: " + extendedError;
+                    break;
+
+                case StorePurchaseStatus.NetworkError:
+                    tbStatus.Text = "The purchase was unsuccessful due to a network error. " +
+                        "ExtendedError: " + extendedError;
+                    break;
+
+                case StorePurchaseStatus.ServerError:
+                    tbStatus.Text = "The purchase was unsuccessful due to a server error. " +
+                        "ExtendedError: " + extendedError;
+                    break;
+
+                default:
+                    tbStatus.Text = "The purchase was unsuccessful due to an unknown error. " +
+                        "ExtendedError: " + extendedError;
+                    break;
+            }
+
         }
     }
 }
